@@ -622,7 +622,7 @@
 					function invokeLater(provider, method, insertMethod) {
 						return function () {//第三个参数没有定义时是push
 							invokeQueue[insertMethod || "push"]([provider, method, arguments]); //push是尾部放入
-							console.log("invokeQueue-change-" + invokeQueue);
+							console.log("invokeQueue-len("+invokeQueue.length+")"+(insertMethod||"push")+"-[" + arguments[0]+","+arguments[1]+"]");
 							return moduleInstance;
 						}
 					}
@@ -1107,13 +1107,13 @@
 							moduleFn = angularModule(module);//获取模块
 							var requireRunBlocks = loadModules(moduleFn.requires);//从依赖获取运行块
 							runBlocks = runBlocks.concat(requireRunBlocks).concat(moduleFn._runBlocks);//所有运行块
-							invokeQueue = moduleFn._invokeQueue;//invoke 队列
+							invokeQueue = moduleFn._invokeQueue;//处理模块的invoke 队列
 							ii = invokeQueue.length;
 							for (i = 0; i < ii; i++) {
 								var invokeArgs = invokeQueue[i];
 								var provider = providerInjector.get(invokeArgs[0]);//invokeArgs contain[provider(服务), method(执行方法), arguments(参数)]
 								provider[invokeArgs[1]].apply(provider, invokeArgs[2]);//使用provider作为this执行环境执行method方法,使用第三个参数
-								console.log("invokeQueue->:[" + invokeArgs[0] + "," + invokeArgs[1] + "," + Array.prototype.slice.call(invokeArgs[2]).join("-"));
+								console.log("exec invokeQueue->:[" + invokeArgs[0] + "," + invokeArgs[1] + "," + Array.prototype.slice.call(invokeArgs[2]).join("-"));
 							}
 						}
 						else {

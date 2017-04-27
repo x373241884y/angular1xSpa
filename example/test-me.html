@@ -85,6 +85,20 @@
 </div>
 <script type="text/javascript">
     var app = angular.module("app", []);
+    app.config(
+        ['$controllerProvider', '$compileProvider', '$filterProvider', '$provide',
+            function ($controllerProvider, $compileProvider, $filterProvider, $provide) {
+                console.log(1111);
+                // lazy controller, directive and service
+                app.controller = $controllerProvider.register;
+                app.directive = $compileProvider.directive;
+                app.filter = $filterProvider.register;
+                app.factory = $provide.factory;
+                app.service = $provide.service;
+                app.constant = $provide.constant;
+                app.value = $provide.value;
+            }
+        ]);
     app.controller("testCtrl", testCtrl);
     app.controller("test2Ctrl", test2Ctrl);
     app.filter('filtername', function () {
@@ -122,19 +136,19 @@
                         }
                     });
 
-                    $scope.$watch(function() {
+                    $scope.$watch(function () {
                         return childScope;
-                    },function(value) {
-                        if(value){
-                            value.$on("$destroy",function() {
+                    }, function (value) {
+                        if (value) {
+                            value.$on("$destroy", function () {
                                 console.debug(12313);
                             });
                         }
 
                     })
 
-                    $scope.$watch($attr.destory,function(value) {
-                        if(!!value){
+                    $scope.$watch($attr.destory, function (value) {
+                        if (!!value) {
                             if (childScope) {
                                 childScope.$destroy();
                                 childScope = null
