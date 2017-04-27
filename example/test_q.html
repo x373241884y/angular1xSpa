@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>test $q</title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/angular-1.2-me.js"></script>
+</head>
+<body>
+
+<h3>test $q</h3>
+
+<div ng-controller="testCtrl">
+    <button type="button" ng-click="testlazy()">click here</button>
+    <button type="button" testclick="testxxx()">click here</button>
+    <button type="button" timeoutx>click here</button>
+</div>
+
+<script type="text/javascript">
+
+
+    var app = angular.module("app", []);
+    app.directive("testclick", ['$parse', function ($parse) {
+        return {
+            compile: function ($element, attr) {
+                var fn = $parse(attr['testclick']);
+                return function (scope, element) {
+                    element.on('click', function (event) {
+                        scope.$apply(function () {
+                            fn(scope, {
+                                $event: event
+                            })
+                        })
+                    })
+                }
+            }
+        }
+    }]);
+    app.directive("timeoutx", ['$parse', function ($parse) {
+        return {
+            link: function (scope, element) {
+                var options={
+                    timeout:10
+                };
+                var innterl;
+                function count() {
+                    if(count.timecount==0) {
+                        element.text("time over");
+                        clearInterval(innterl);
+                        return;
+                    }
+                    element.text("time sx :"+count.timecount);
+                    count.timecount--;
+                }
+                element.on('click', function () {
+                    count.timecount = options.timeout;
+                    innterl =setInterval(function() {
+                        count();
+                    },1000);
+                });
+            }
+        }
+    }]);
+    app.controller('testCtrl', ['$scope', '$q', function ($scope, $q) {
+        $scope.testxxx=function() {
+            console.log(123);
+        };
+        $scope.testlazy = function () {
+            function loadjs($q, js) {
+                var delay = $q.defer();
+                if (js) {
+                    $.getScript(js, function () {
+                        delay.resolve();
+                    });
+                }
+                return delay.promise;
+            }
+
+            function lazymulta(obj) {
+                var jsList = [];
+                var promises = [];
+                if (obj) {
+                    jsList = obj.split(",");
+                    angular.forEach(jsList, function (js, kay) {
+                        promises.push(loadjs($q, js));
+                    });
+                }
+                $q.all(promises).then(function success() {
+                    console.log("load resource success");
+                }, function error(err) {
+                    console.log("load resource fail");
+                });
+            }
+
+            function lazy2() {
+                var defer = $q.defer();
+                $.getScript('js/testa.js', function () {
+                    defer.resolve('success');
+//                    defer.reject('error');
+                });
+                defer.promise.then(function (info) {
+                    console.log("success===>" + info);
+                }, function (err) {
+                    console.log("error===>" + err);
+                });
+            }
+
+//            lazymulta('js/testa.js,js/testb.js');
+            lazy2();
+        };
+        var i = 0;
+        function task($q, js) {
+            var delay = $q.defer();
+            $.getScript(js, function (data) {
+                if(i=0) {
+                    var time = 3000;
+                }else if(i==1) {
+                    var time = 2000;
+                }else{
+                    var time = 1000;
+                }
+                setTimeout(function () {
+                    eval(data);
+                    delay.resolve();
+                }, time);
+
+            });
+            return delay.promise;
+        }
+
+        $q.when(task($q, 'fix/testa.js')).then(task($q, 'fix/testb.js')).then(task($q, 'fix/testc.js')).then(function() {
+            console.log('sss');
+        });
+    }]);
+    function sleep(n) {
+        var start = new Date().getTime();
+        while (true) if (new Date().getTime() - start > n) break;
+    }
+</script>
+</body>
+</html>

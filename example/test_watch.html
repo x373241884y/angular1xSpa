@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/angular-1.2.js"></script>
+</head>
+<body>
+
+<div ng-controller="testControl">
+    <select name="CarPrice" ng-model="CarPrice">
+        <option value="1">111111</option>
+        <option value="2">222222</option>
+        <option value="3">333333</option>
+    </select>
+    <br/>
+    <select name="FirstPayAmt1" ng-model="FirstPayAmt1">
+        <option value="1">111111</option>
+        <option value="2">222222</option>
+        <option value="3">333333</option>
+    </select>
+    <br/>
+    result==>{{datetest}}
+</div>
+
+<script type="text/javascript">
+    angular.module('myApp', [])
+            .controller('testControl', function ($scope) {
+                // we can leave it empty, it just needs to be defined
+                $scope.test = '123';
+                console.log('testController');
+                $scope.$watch("CarPrice",function(){
+                    $scope.tag_flag1=1;
+                },true);
+                $scope.$watch("FirstPayAmt1",function(){
+                    $scope.tag_flag2=1;
+                },true);
+                //自定义监听器
+                $scope.$watch(function(){
+                    if(($scope.tag_flag1+$scope.tag_flag2)!=0){
+                        $scope.tag_flag1=0;
+                        $scope.tag_flag2=0;
+                        return true;
+                    }
+                    return false;
+                },function(newValue,oldValue){
+                    if(newValue){ //true--->false 不执行
+                        if($scope.CarPrice && $scope.FirstPayAmt1){
+                            $scope.datetest = new Date().getTime();
+//                            $scope.Amt=$scope.CarPrice-$scope.FirstPayAmt1;
+                        }else{
+                            $scope.datetest=null;
+                        }
+                    }
+                },true);
+            });
+</script>
+
+</body>
+</html>

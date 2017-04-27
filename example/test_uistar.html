@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css" rel="stylesheet">
+		 input.ng-invalid.ng-dirty {
+			background-color: #FFC0CB;
+		}
+		 input.ng-valid.ng-dirty {
+			background-color: #78FA89;
+		}
+	</style>
+	<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
+	<script src="js/angular-1.2.js"></script>
+</head>
+<body>
+
+<div ng-controller="testControl">
+	<div class="container">
+		<form name="testxx">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group" ui-star>
+						<label class="control-label">操作标志</label>
+						<select class="form-control" name="oprfg9" ng-model="oprfg9">
+							<option value="1">1-录入</option>
+							<option value="2">2-复核</option>
+							<option value="3">3-直通</option>
+						</select>
+					</div>
+
+				</div>
+				<div class="col-md-4">
+					<div class="form-group" ui-star>
+						<label class="control-label">贷款借据号</label>
+						<input type="text" class="form-control" name="loancf" ng-model="loancf" v-enter="getInfo2061()" ng-pattern="/^\d{5}$/">
+					</div>
+
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="control-label">贷款账号</label>
+						<input type="text" class="form-control" name="loanac"  readonly v-value="info2061.loanac">
+					</div>
+
+				</div>
+			</div>
+		</form>
+		{{loancf}}
+	</div>
+</div>
+
+<script type="text/javascript">
+	angular.module('myApp', []).controller('testControl', function ($scope) {
+		// we can leave it empty, it just needs to be defined
+
+	}).directive('uiStar', ['$timeout', '$compile', function ($timeout, $compile) {
+		return {
+			restrict: 'A',
+			priority: 9999,
+			link: function (scope, element, attr) {
+				// get the $prev or $parent of this el
+				var label = $(element).find(":first"), ctrl, label_dom, html, switchFlag;
+				ctrl = $(element).find("input,select,textarea");
+				label_dom = label[0];
+				html = label.html();
+				switchFlag = element.attr("ui-star-switch");
+				if (label_dom instanceof HTMLLabelElement) {
+					if (switchFlag) {
+						scope.$watch(function () {
+							return scope.$eval(switchFlag);
+						}, function (newValue, oldValue) {
+							if (newValue) {
+								label.html(html + "<span class='red'>*</span>");
+								ctrl.attr("required", "true");
+							} else {
+								label.html(html);
+								ctrl.removeAttr("required");
+							}
+//							$compile(ctrl)(scope);
+						});
+					} else {
+						label.html(html + "<span class='red'>*</span>");
+						ctrl.attr("required", "true");
+//						$compile(ctrl)(scope);
+					}
+				}
+			}
+		};
+	}]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="../js/angular-1.2-me.js"></script>
+</head>
+<body>
+<div ng-controller="testCtrl">
+	<textarea type="text" name="expr" ng-model="expr" width="400" height="300">
+
+		</textarea>
+	<button type="button" ng-click="testParse()">parse</button>
+</div>
+
+<script type="text/javascript">
+	var app = angular.module("app", []);
+	app.controller("testCtrl", ["$scope", "$parse", function ($scope, $parse) {
+		$scope.testParse = function () {
+			var fn = $parse($scope.expr);
+		};
+	}]);
+</script>
+</body>
+</html>

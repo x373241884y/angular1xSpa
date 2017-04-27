@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="plunker">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+</head>
+<body>
+<div ng-controller="testCtrl">
+	<div ng-init="name='world'"></div>
+	<ul id="test"></ul>
+
+	<button type="button" ng-click="testClick(1)">testClick</button>
+	<button type="button" ng-click="testClick(2)">testClick</button>
+	<button type="button" ng-click="testClick(3)">testClick</button>
+</div>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="//cdn.bootcss.com/angular.js/1.2.2/angular.js"></script>
+<script src="ocLazyLoad/dist/ocLazyLoad.js"></script>
+<script type="text/javascript">
+	var app = angular.module('plunker', ['oc.lazyLoad']);
+
+	app.controller("testCtrl", ["$scope", "$compile", function ($scope, $compile) {
+		console.log(1);
+		$scope.testClick = function (args) {
+			var ul = $("#test"), li;
+			if (args == 1) {
+				li = $('<li><div><div ng-include="\'htmls/testinclude1.html\'"></div></div></li>');
+			} else if (args == 2) {
+				li = $('<li><div><div ng-include="\'htmls/testinclude2.html\'"></div></div></li>');
+			} else if (args == 3) {
+				li = $('<li><div><div ng-include="\'htmls/testinclude3.html\'"></div></div></li>');
+			}
+			ul.append(li);
+			$compile(li[0])($scope);
+		};
+	}]);
+	app.config(
+			['$controllerProvider', '$compileProvider', '$filterProvider', '$provide',
+				function ($controllerProvider, $compileProvider, $filterProvider, $provide) {
+
+					// lazy controller, directive and service
+					app.controller = $controllerProvider.register;
+					app.directive = $compileProvider.directive;
+					app.filter = $filterProvider.register;
+					app.factory = $provide.factory;
+					app.service = $provide.service;
+					app.constant = $provide.constant;
+					app.value = $provide.value;
+				}
+			])
+
+</script>
+
+</body>
+</html>

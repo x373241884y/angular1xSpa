@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/angular-1.2-me.js"></script>
+	<!--<script src="../js/angular-1.2.js"></script>-->
+</head>
+<body>
+<div ng-controller="Ctrl">
+	<input ng-model="title"><br>
+	<input ng-model="type"><br>
+	<input ng-model="time"><br>
+	<textarea ng-model="text"></textarea> <br/>
+	<pane title="{{title}}">
+            <div>
+	            <p class="type">{{type}}<p>
+	            <p class="time">{{time}}<p>
+	            <p class="content">{{text}}<p>
+            </div>
+	</pane>
+</div>
+<script type="text/javascript">
+	var app = angular.module("app", []);
+	app.controller("Ctrl", function ($scope) {
+		$scope.title = "我是标题";
+		$scope.type = "我是type";
+		$scope.text = "我是内容";
+	});
+	app.directive('pane', function() {
+		return {
+			restrict: 'EA',
+			template: '<div style="border: 1px solid black;"><div class="title" style="background-olor: gray">{{title}}</div></div>',
+			replace: true,
+			transclude: true,
+			controller: ['$scope', '$element', '$log','$transclude', function ($scope, $element,$log, $transclude) {
+				$transclude(function(clone, scope) {
+//					var time = clone.find('.time');
+//					var type = clone.find('.type');
+//					var text= clone.find('.content');
+					$element.append(clone);
+//					$element.append(time);
+//					$element.append(type);
+//					$element.append(text)
+				});
+				$transclude(function(clone) {
+					$element.append(clone);
+				});
+				$transclude(function(clone) {
+					$element.append(clone);
+				});
+				$transclude(function(clone) {
+					$element.append(clone);
+				});
+			}],
+		};
+	});
+
+</script>
+</body>
+</html>

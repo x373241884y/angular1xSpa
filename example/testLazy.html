@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/angular-1.2-me.js"></script>
+</head>
+<body>
+<div >test</div>
+
+<script type="text/javascript">
+    var app = angular.module('app', []);
+    app.directive("testLazy",['$rootScope',function($rootScope) {
+        $.get("help/msg.json", function (data) {
+            $rootScope.testLay = "true";
+        });
+        return {
+            restrict: 'A',
+            terminal: true,
+            priority: 1000,
+            compile: function (element, attrs) {
+                // we store the content and remove it before compilation
+                var content = element[0].innerHTML;
+                element.html('');
+                return function ($scope, $element, $attr) {
+                    $scope.$watch(function () {
+                        // it can be a module name (string), an object, an array, or a scope reference to any of this
+                        return model($scope) || $attr.ocLazyLoad;
+                    }, function (moduleName) {
+                        if (angular.isDefined(moduleName)) {
+                            $ocLazyLoad.load(moduleName).then(function success(moduleConfig) {
+                                //min version bug fix...(comment it ,and add follow two line)
+                                //$animate.enter($compile(content)($scope), null, $element);
+
+                                $animate.enter(content, $element);
+                                // get the new content & compile it
+                                $compile($element.contents())($scope);
+                            });
+                        }
+                    }, true);
+                };
+            }
+        };
+    }])
+</script>
+</body>
+</html>

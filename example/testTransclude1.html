@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/angular-1.2-me.js"></script>
+	<!--<script src="../js/angular-1.2.js"></script>-->
+</head>
+<body>
+<div ng-controller="Ctrl">
+	<input ng-model="title"><br>
+	<textarea ng-model="text"></textarea> <br/>
+	<pane title="{{title}}"><div style="color: red;">{{text}}123</div></pane>
+</div>
+<script type="text/javascript">
+	var app = angular.module("app", []);
+	app.controller("Ctrl", function ($scope) {
+		$scope.title = "我是标题";
+		$scope.text = "我是内容";
+	});
+	app.directive('pane', function () {
+		return {
+			restrict: 'E',
+			transclude: true,
+			scope: {title: '@'},
+			template: '' +
+			'<div style="border: 1px solid black;">' +
+			'   <div style="background-color: gray">{{title}}</div>' +
+			'   <div ng-transclude></div>' +
+			'</div>'
+		};
+	});
+</script>
+</body>
+</html>

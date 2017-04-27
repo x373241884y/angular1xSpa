@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<input id="test" type="text" name="test" value="abcd">
+
+<script type="text/javascript">
+    var test = document.getElementById("test");
+    console.info(test.onkeydown);
+    console.info(test.onkeyup);
+    console.info(test.onkeypress);
+    /*test.onkeydown = function (event) {
+        console.log('onkeydown....');
+//        event.preventDefault();
+//        event.stopPropagation;
+//        event.stopImmediatePropagation();
+    };
+
+    test.onkeypress = function (event) {
+        console.log('onkeypress....');
+//        event.preventDefault();
+    };
+
+    test.onkeyup = function (event) {
+        console.log('onkeyup....');
+//        event.preventDefault();
+    };*/
+    test.addEventListener('keydown', function (event) {
+        console.log(event.type);
+//        event.preventDefault();
+        event.stopImmediatePropagation()
+    });
+    test.addEventListener('keypress',function(event) {
+        console.log(event.type);
+//        event.preventDefault();
+    })
+    test.addEventListener('keyup',function(event) {
+        console.log(event.type);
+    })
+</script>
+
+</body>
+</html>

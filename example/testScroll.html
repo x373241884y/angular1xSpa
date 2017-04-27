@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/angular-1.2.js"></script>
+    <style type="text/css" rel="stylesheet">
+        #scrollArea {
+
+            height: 280px;
+            overflow: auto;
+
+        }
+
+        #bottom {
+
+            display: block;
+            margin-top: 2000px;
+
+        }
+    </style>
+</head>
+<body>
+<div id="scrollArea" ng-controller="ScrollController">
+
+    <a ng-click="gotoBottom()">Go to bottom</a>
+    <a id="bottom"></a> You're at the bottom!
+
+</div>
+<script type="text/javascript">
+    angular.module('app', [])
+
+            .controller('ScrollController', ['$scope', '$location', '$anchorScroll',
+                function ($scope, $location, $anchorScroll) {
+
+                    $scope.gotoBottom = function() {
+
+                        // 将location.hash的值设置为
+                        // 你想要滚动到的元素的id
+                        $location.hash('bottom');
+
+                        // 调用 $anchorScroll()
+                        $anchorScroll();
+
+                    };
+                }]);
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body ng-app="B">
+<div ng-controller="TestCtrl">
+	<div ng-bind="abc"></div>
+	<div ng-bind="abc"></div>
+	<div ng-bind="abc"></div>
+</div>
+<h1>Hello Plunker!</h1>
+<script src="../js/angular-1.4.7.js"></script>
+<script type="text/javascript">
+	// Code goes here
+
+	angular.module('B', []).config(function ($provide) {
+				$provide.decorator('ngControllerDirective', function ($delegate) {
+					var $controllerProvider = $delegate[0];
+					$controllerProvider.compile = function(tElement,tAttr){
+						console.log('compile');
+						return function (scope,element,attrs,ctrl){
+							console.log(ctrl);
+							console.log('link');
+						};
+					};
+					return $delegate;
+				});
+			})
+			.controller('TestCtrl', function ($scope) {
+				console.log(123);
+				this.abc = 1231313;
+			});
+
+</script>
+</body>
+
+</html>
+
+

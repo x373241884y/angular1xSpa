@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/angular-1.4.7.js"></script>
+</head>
+<body>
+<div ng-controller="testControl">
+    <div ng-init="message='123456'">
+        <input id="abc" ng-model="message" ng-change="testchange()">
+        <a href="#" v-click="test()">123</a>
+        <div> {{message}}</div>
+        <button type="button" ng-click="clicktest()">test</button>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    angular.module('myApp', [])
+            .controller('testControl', function ($scope) {
+                // we can leave it empty, it just needs to be defined
+                $scope.testchange=function() {
+                    console.log('testchange');
+//                    alert(123);
+                };
+                $scope.clicktest = function() {
+                    $scope.message = "";
+                };
+            });
+</script>
+</body>
+</html>

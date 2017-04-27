@@ -1,0 +1,11 @@
+  //try to bind to jquery now so that one can write angular.element().read()
+  //but we will rebind on bootstrap again.
+  bindJQuery(); //绑定jquery
+
+  publishExternalAPI(angular); //为angular 添加 api,准备启动环境
+
+  jqLite(document).ready(function() {
+    angularInit(document, bootstrap); //angular init
+  });
+
+})(window, document);

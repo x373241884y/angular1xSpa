@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="angular.js-1.2.4/css/angular.css">
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/angular-1.2.js"></script>
+    <script src="angular.js-1.2.4/src/ngAnimate/animate.js"></script>
+    <script src="angular.js-1.2.4/src/ngRoute/route.js"></script>
+    <script src="angular.js-1.2.4/src/ngRoute/routeParams.js"></script>
+    <script src="angular.js-1.2.4/src/ngRoute/directive/ngView.js"></script>
+</head>
+<body>
+<div ng-controller="testCtrl">
+    <button ng-click="test('/test1')">test1</button>
+    <button ng-click="test('/test2')">test2</button>
+    <button ng-click="test('/test3')">test3</button>
+</div>
+
+
+<div ng-view class="view-slide-in" ng-animate="'animate'"></div>
+
+<script type="text/javascript">
+    var app = angular.module('app', ['ngAnimate','ngRoute']);
+    app.animation('.view-slide-in', function () {
+        return {
+            enter: function(element, done) {
+                element.css({
+                    opacity: 0.5,
+                    position: "relative",
+//                    top: "1000px",
+                    left: "100%"
+                }).animate({
+                            top: 0,
+                            left: 0,
+                            opacity: 1
+                        }, 1000, done);
+            }
+        };
+    });
+    app.config(function($routeProvider) {
+        $routeProvider
+                .when('/', {
+//                    controller: 'MainController',
+                    templateUrl: 'testAnimate/tab1.html'
+                }).when('/test2',{
+                    templateUrl: 'testAnimate/tab2.html'
+                }).when('/test3', {
+                    templateUrl: 'testAnimate/tab3.html'
+                })
+                .otherwise({
+                    redirectTo: '/'
+                });
+    });
+    testCtrl.$inject = ['$scope', '$location'];
+    function testCtrl($scope,$location) {
+        $scope.test=function(ps) {
+            console.log(ps);
+            $location.path(ps);
+
+        };
+    }
+</script>
+
+</body>
+</html>

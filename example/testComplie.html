@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="plunker">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../js/angular-1.2-me.js"></script>
+	</head>
+	<body>
+	<div ng-init="name='world'"></div>
+	<level-one id="test1">
+		<level-two id="test2">
+			<level-three>
+				Hello {{name}}
+			</level-three>
+		</level-two>
+	</level-one>
+	<script type="text/javascript">
+		var app = angular.module('plunker', []);
+		function createDirective(name) {
+			return function () {
+				return {
+					restrict: 'E',
+					compile: function (tElem, tAttrs) {
+						console.log(name + ': compile => \n' + tElem.prop("outerHTML"));
+						return {
+							pre: function (scope, iElem, iAttrs) {
+								console.log(name + ': pre link => \n' + iElem.prop("outerHTML"));
+							},
+							post: function (scope, iElem, iAttrs) {
+								console.log(name + ': post link => \n' + iElem.prop("outerHTML"));
+							}
+						}
+					}
+				}
+			}
+		}
+		app.directive('levelOne', createDirective('levelOne'));
+		app.directive('levelTwo', createDirective('levelTwo'));
+		app.directive('levelThree', createDirective('levelThree'));
+
+	</script>
+
+	</body>
+</html>

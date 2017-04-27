@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/angular-1.2-me.js"></script>
+</head>
+<body>
+<div testxx="abc==true" destory="abc">cccccc</div>
+<div>
+    <button ng-click="abc=!abc">texx</button>
+</div>
+<div>
+    scope test
+</div>
+<h3>scope1</h3>
+
+<div ng-controller="testCtrl">
+    <div ng-init="scope1_name='hello1'">
+        {{scope1_name}}
+    </div>
+    <input type="text" name="scope1_pass" ng-model="scope1_pass">
+    <br/>
+    {{scope1_pass}}
+    <span ng-bind="scope1_pass1"></span>
+    <button ng-click="test1()">test</button>
+</div>
+<h3>scope2</h3>
+
+<div ng-controller="test2Ctrl">
+    <div ng-init="scope2_name='hello2'">
+        {{scope2_name}}
+    </div>
+    testSelect
+    <select ng-model="create_price" ng-options="obj.name as (obj.name|filtername) for obj in colors">
+        <option value="">first</option>
+    </select>
+    <input type="text" name="scope2_pass" ng-model="scope2_pass" ng-pattern="/\d{5}/">
+    <br/>
+    <button ng-click="test2();">test</button>
+
+</div>
+<div ng-init="fdafdaf=1">
+
+    <div testxx="fdafdaf" ng-click="fdafdaf=!fdafdaf">
+        <div>人傣</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    testCtrl.$inject = ['$scope', '$rootScope', '$parse'];
+    function testCtrl($scope, $rootScope) {
+        $rootScope.testabc = "aaaa";
+        $scope.test1 = function () {
+            console.log($scope);
+            /*            $rootScope.testabc = "xxxx";
+             $rootScope.testxxx = new Date().getTime()+"";
+             console.log(typeof $rootScope.testxxx +":"+$rootScope.testxxx);*/
+        };
+
+    }
+    test2Ctrl.$inject = ['$scope', '$rootScope'];
+    function test2Ctrl($scope, $rootScope) {
+        $scope.test2 = function () {
+            /*            $rootScope.testabc = "xxxx";
+             $rootScope.testxxx = new Date().getTime()+"";
+             console.log(typeof $rootScope.testxxx +":"+$rootScope.testxxx);*/
+        };
+        $scope.colors = [
+            {name: 'blackxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', shade: 'dark'},
+            {name: 'whitexxxxxxxxxxxxxxxxxxxxx', shade: 'light'},
+            {name: 'red', shade: 'dark'},
+            {name: 'blue', shade: 'dark'},
+            {name: 'yellow', shade: 'light'}
+        ];
+    }
+    /*    angular.element(document).ready(function () {
+     angular.bootstrap(document, ['ng']);
+     });*/
+</script>
+<div ng-init="rootname='hellorrrr'">
+    {{rootname}}
+    <input type="text" name="root_pass" ng-model="root_pass">
+    {{123213213213213213123|number:'x':'y':'z'}}
+</div>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.controller("testCtrl", testCtrl);
+    app.controller("test2Ctrl", test2Ctrl);
+    app.filter('filtername', function () {
+        return function (string) {
+            if (string.length > 6) {
+                return string.substring(0, 6);
+            }
+
+            return string;
+        };
+    });
+    app.directive("testxx", [
+        function () {
+            return {
+                transclude: "element",
+                priority: 600,
+                terminal: !0,
+                restrict: "A",
+                $$tlb: !0,
+                link: function ($scope, $element, $attr, ctrl, $transclude) {
+                    var block, childScope;
+
+                    $scope.$watch($attr.testxx, function (value) {
+                        console.log("xxx");
+                        if (!!value) {
+                            if (!childScope)
+                                childScope = $scope.$new();
+
+                            $transclude(childScope, function (clone) {
+                                block = {
+                                    startNode: clone[0],
+                                    endNode: clone[clone.length++] = document.createComment(" end ngIf: " + $attr.ngIf + " ")
+                                };
+                            })
+                        }
+                    });
+
+                    $scope.$watch(function() {
+                        return childScope;
+                    },function(value) {
+                        if(value){
+                            value.$on("$destroy",function() {
+                                console.debug(12313);
+                            });
+                        }
+
+                    })
+
+                    $scope.$watch($attr.destory,function(value) {
+                        if(!!value){
+                            if (childScope) {
+                                childScope.$destroy();
+                                childScope = null
+                            }
+                            if (block) {
+                                block = null;
+                            }
+                        }
+
+                    })
+
+                }
+            }
+        }
+    ]);
+</script>
+</body>
+</html>

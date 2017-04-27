@@ -1,0 +1,6 @@
+/* Put your css in here */
+
+.colors {
+    background-color: blue;
+}
+ .ng-invalid { border: 1px solid red; }

@@ -1,2 +1,2 @@
-# ng1x--analysis
-angular1.x study and discuss
+# ng1x--study example 
+angular1.x study && comment && discuss && test && example

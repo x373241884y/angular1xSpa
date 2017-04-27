@@ -1,0 +1,99 @@
+<!doctype html>
+<html ng-app="Demo">
+<head>
+	<meta charset="utf-8"/>
+
+	<title>
+		Using Start/End Directive-Ranges In AngularJS 1.2
+	</title>
+
+	<style type="text/css">
+		div.container {
+			border: 1px solid red;
+			margin: 16px 0px 16px 0px;
+			padding: 0px 16px 0px 16px;
+		}
+
+		p.item {
+			border: 1px solid gold;
+		}
+	</style>
+</head>
+<body ng-controller="AppController">
+
+<h1>
+	Using Start/End Directive-Ranges In AngularJS 1.2
+</h1>
+
+<!-- START: Simple Directive Test. -->
+<p bn-simple-start>
+	Start Simple Directive
+</p>
+
+<p>
+	... content...
+</p>
+
+<p bn-simple-end>
+	End Simple Directive
+</p>
+<!-- END: Simple Directive Test. -->
+
+
+<!-- START: Simple Directive Test. -->
+<p bn-complex-start>
+	Start Complex Directive
+</p>
+
+<p>
+	... content...
+</p>
+
+<p bn-complex-end>
+	End Complex Directive
+</p>
+<!-- END: Simple Directive Test. -->
+
+
+<!-- Load scripts. -->
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+	// Create an application module for our demo.
+	var app = angular.module("Demo", []);
+	app.controller("AppController",
+			function ($scope) { /* ... */
+			}
+	);
+	app.directive("bnSimple", function () {
+		return {
+			link: function link($scope, elements, attributes) {
+				console.log("Simple Element(s):");
+				console.log(elements);
+				elements.addClass("item");
+			}
+		};
+	});
+	app.directive("bnComplex", function () {
+
+
+		return {
+			transclude: "element",
+			compile: function compile(tElement, tAttributes, transclude) {
+				// I bind the UI to the $scope.
+				function link($scope, element, attributes) {
+					transclude($scope, function (clonedContents) {
+						clonedContents.addClass("item");
+						var div = $("<div />").addClass("container").append(clonedContents).insertAfter(element);
+					});
+				}
+
+				return link;
+			},
+
+		};
+	});
+</script>
+
+</body>
+</html>

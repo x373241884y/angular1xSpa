@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css" rel="stylesheet">
+        .expander {
+            border: 1px solid black;
+            width: 250px;
+        }
+
+        .expander>.title {
+            background-color: black;
+            color: white;
+            padding: .1em .3em;
+            cursor: pointer;
+        }
+
+        .expander>.body {
+            padding: .1em .3em;
+        }
+    </style>
+    <script src="js/angular-1.2.js"></script>
+</head>
+<body>
+<div ng-controller='SomeController'>
+    <expander class='expander' expander-title='title'>
+        {{text}}
+    </expander>
+</div>
+<script type="text/javascript">
+    var expanderModule=angular.module('app', [])
+    expanderModule.directive('expander',['$compile', function($compile) {
+        return {
+            restrict : 'EA',
+            replace : true,
+//            transclude : true,
+            scope : {
+                title : '=expanderTitle'
+            },
+            template : '<div>'
+            + '<div class="title" id="abc{{test}}" ng-click="toggle()">{{title}}</div>'
+            + '<div class="body" id="xxx" ng-show="showMe" ></div>'
+            + '</div>',
+            link : function(scope, element, attrs) {
+                scope.showMe = false;
+                console.log(document.getElementById("xxx"));
+                scope.test = new Date().getTime();
+//                $compile(element.contents())(scope);
+                console.log(document.getElementById(scope.test));
+                scope.toggle = function toggle() {
+                    scope.showMe = !scope.showMe;
+                }
+            }
+        }
+    }]);
+    expanderModule.controller('SomeController',function($scope) {
+        $scope.title = '点击展开';
+        $scope.text = '这里是内部的内容。';
+    });
+</script>
+</body>
+</html>

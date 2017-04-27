@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div ng-app="app" ng-controller="QuestionController">
+	<ul ng-repeat="question in Questions">
+		<li>
+			<div>{{question.Text}}</div>
+			<select ng-model="Answers[question.Name]" ng-options="option for option in question.Options">
+			</select>
+		</li>
+	</ul>
+
+	<a ng-click="ShowAnswers()">Submit</a>
+</div>
+<script src="js/angular-1.4.7.js"></script>
+<script type="text/javascript">
+	var app = angular.module("app", []);
+
+	app.controller("QuestionController",QuestionController);
+	function QuestionController($scope) {
+		$scope.Answers = {};
+
+		$scope.Questions = [
+			{
+				"Text": "Gender?",
+				"Name": "GenderQuestion",
+				"Options": ["Male", "Female"]},
+			{
+				"Text": "Favorite color?",
+				"Name": "ColorQuestion",
+				"Options": ["Red", "Blue", "Green"]}
+		];
+
+		$scope.ShowAnswers = function()
+		{
+			console.log($scope.Answers);
+		};
+	}
+</script>
+</body>
+</html>
