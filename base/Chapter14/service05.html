@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>test services  本例子使用service一次性植入多个服务</div>
+<div ng-controller="mainCtrl">test</div>
+<script src="../js/angular-1.2-me.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    var service = {};
+    service.service01 = [function () {
+        return {
+            test: function () {
+                alert("service01-test");
+            }
+        };
+    }];
+    service.service02 = [function () {
+        return {
+            test: function () {
+                alert("service02-test");
+            }
+        };
+    }];
+    app.factory(service); //一次植入多个服务  service或者service
+
+    function mainCtrl($scope,service01,service02) {
+        service01.test();
+        service02.test();
+        console.log(service01.test);
+        console.log(service02.test);
+    }
+</script>
+</body>
+</html>

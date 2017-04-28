@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/angular.min.js"></script>
+</head>
+<body>
+<form ng-controller="StartUpController1">
+    Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+    Recommendation: {{funding.needed}}
+</form>
+
+<form ng-controller="StartUpController2">
+    Starting: <input ng-model="funding2.startEstimate2">
+    Recommendation: {{funding2.needed2}}
+</form>
+
+
+<script type="text/javascript">
+    function StartUpController1($scope) {
+        $scope.funding = {startingEstimate: 0};
+        $scope.computeNeeded = function () {
+            $scope.funding.needed = $scope.funding.startingEstimate * 10;
+        };
+    }
+    function StartUpController2($scope) {
+        $scope.funding2 = {startingEstimate2: 0};
+        $scope.computeNeeded2 = function (newValue) {
+            if(!!newValue){
+                $scope.funding2.needed2 = newValue * 10;
+            }
+        };
+        $scope.$watch('funding2.startEstimate2',
+                $scope.computeNeeded2);
+    }
+
+</script>
+<input type="text">
+</body>
+</html>

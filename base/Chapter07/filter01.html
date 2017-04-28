@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>test filter01</div>
+<div ng-controller="filterController">
+
+    <label>username:</label>
+    <input type="text" name="username" ng-model="username" />{{username|firstFilter:1:5:'a'}} 使用方式1
+    <br/>
+    <button ng-click="test()">使用方式2</button>
+</div>
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.filter("firstFilter", function () {
+        return function (input) {
+//            console.log(input);//
+            for (var i = 0; i < arguments.length; i++) {
+                var obj = arguments[i];
+                console.info(obj); //输岀参数(包括input)
+            }
+            if (input) {
+                return input[0].toUpperCase() + input.slice(1);
+            }
+        };
+    });
+    function filterController($scope,$filter) {
+        $scope.test=function() {
+            alert($filter('firstFilter')('abcdef'));
+        };
+    }
+</script>
+</body>
+</html>

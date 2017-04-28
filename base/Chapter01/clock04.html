@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello canvas</title>
+    <style type="text/css">
+        body{
+            background: #dddddd
+        }
+        #canvas{
+            margin: 10px;
+            padding: 10px;
+            background: #ffffff;
+            border: thin inset #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+<!-- 在设置canvas宽度高度的时 不能使用px后缀
+    元素大小与绘图表面大小
+    宽度和高度如果写在CSS里面只会改变元素大小绘图表面不会改变 这时浏览器会对绘图表面进行缩放
+-->
+<center>
+
+    <canvas id="canvas" width="600" height="600"></canvas>
+</center>
+<script type="text/javascript">
+    var canvas = document.getElementById("canvas"),
+            context = canvas.getContext("2d"),
+            c_raduis=200, //园半径
+            c_raduis_numbers =c_raduis+ 25,//时钟点的半径
+            c_raduis_secound =c_raduis-25,//秒针半径
+            c_raduis_m =c_raduis_secound-25,//分针半径
+            c_raduis_h =c_raduis_m-25;//秒针半径
+
+    context.font="15pt Arial";
+
+    //画出X轴 和Y轴
+    function drawXY(){
+        context.beginPath();
+        context.moveTo(0,canvas.height/2);
+        context.lineTo(canvas.width,canvas.height/2);
+        context.moveTo(canvas.width/2,0);
+        context.lineTo(canvas.width/2,canvas.height);
+        context.stroke();
+    }
+    //移动到圆心
+    function toCenter(){
+        context.moveTo(canvas.width/2,canvas.height/2);
+    }
+
+    //画园
+    function drawCircle(){
+        context.beginPath();
+        context.arc(canvas.width/2,canvas.height/2,c_raduis,0,Math.PI*2,true);
+        context.stroke();
+    }
+
+    //描绘圆心
+    function drawCenter(){
+        context.beginPath();
+        context.arc(canvas.width/2,canvas.height/2,5,0,Math.PI*2,true);
+        context.fill();
+    }
+
+    //画时钟点
+    function drawNumbers(){
+        var x,y,nums=[1,2,3,4,5,6,7,8,9,10,11,12],numberWidth;
+        context.beginPath();
+        nums.forEach(function(num){
+            toCenter();
+            var angle = Math.PI-Math.PI/6*num;
+            numberWidth = context.measureText(num).width;
+            x=canvas.width/2+Math.sin(angle)*c_raduis_numbers;
+            y=canvas.height/2+Math.cos(angle)*c_raduis_numbers;
+            // context.lineTo(x,y);
+            y+=8;
+            x-=numberWidth/2;
+            context.fillText(num,x,y);
+        });
+        context.stroke();
+    }
+
+    //画时分秒针
+    function drawHandler(){
+        var date = new Date();
+        drawHandlerItem(calc(null,null,date.getSeconds(),date.getMilliseconds()),c_raduis_secound);
+        drawHandlerItem(calc(null,date.getMinutes(),date.getSeconds(),date.getMilliseconds()),c_raduis_m);
+        drawHandlerItem(calc(date.getHours(),date.getMinutes(),date.getSeconds(),date.getMilliseconds()),c_raduis_h);
+    }
+    function drawHandlerItem(a,raduis){
+        var x,y,o={x:canvas.width/2,y:canvas.height/2};
+        x=o.x+Math.sin(Math.PI-(2*Math.PI)/a)*raduis;
+        y=o.y+Math.cos(Math.PI-(2*Math.PI)/a)*raduis;
+        context.beginPath();
+        toCenter();
+        context.lineTo(x,y);
+        context.stroke();
+    }
+    //计算当前时间所占总共时间的比例
+    function calc(h,m,s,ms){
+        var count
+                ,current
+                ,h1=h||0
+                ,m1=m||0
+                ,s1=s||0
+                ,ms1=ms||0
+                ;
+        h1=h1%12;
+        current = h1*60*60*1000+m1*60*1000+s1*1000+ms1;
+
+        if(h!=null)count=12*60*60*1000;
+        else if(m!=null)count=60*60*1000;
+        else if(s!=null)count=60*1000;
+
+
+        return count/current;
+    }
+
+    function drawClock(){
+        context.clearRect(0,0,canvas.width,canvas.height);
+        drawCircle();
+        drawCenter();
+        drawNumbers();
+        drawHandler();
+    }
+
+    function main(a){
+        drawClock();
+        if(window.requestAnimationFrame)window.requestAnimationFrame(main);
+        else {
+            setTimeout(main,20);
+        }
+    }
+    main();
+
+</script>
+</body>
+</html>

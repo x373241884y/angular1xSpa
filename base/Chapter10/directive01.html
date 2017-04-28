@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div>test directive</div>
+<link>
+
+    <a link>https://www.baidu.com</a>
+
+</div>
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.directive("link", function () {
+        return {
+            restrict:"A",
+            transclude:true,
+            controller:function($scope,$element,$transclude,$log) {
+                $transclude(function(clone) {
+                    var a = angular.element('<a>');
+                    a.attr("href", clone.text());
+                    a.text(clone.text());
+                    $log.info("Created new a tag in link directive");
+                    $element.replaceWith(a);
+                })
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

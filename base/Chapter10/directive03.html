@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+<div> 指令scope重定义</div>
+<div >
+    <div ng-controller="MainController">
+        <my-attr info="naomi"></my-attr>
+    </div>
+
+</div>
+
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.directive("myAttr", function () {
+        return {
+            restrict: "E",
+            scope:{
+                customerInfo:'=info'
+            },
+            template:"Name: {{customerInfo.name}} Address: {{customerInfo.address}}<br>Name: {{vojta.name}} Address: {{vojta.address}}"
+        };
+    });
+
+    function MainController($scope) {
+        $scope.naomi = { name: 'Naomi', address: '1600 Amphitheatre' };
+        $scope.vojta = { name: 'Vojta', address: '3456 Somewhere Else' };
+    }
+</script>
+</body>
+</html>

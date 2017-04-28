@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../js/angular-1.2.js"></script>
+</head>
+<body>
+
+<h1>Wrong Way</h1>
+<img src="{{imgSrc}}" />
+
+<h1>Right way</h1>
+<img ng-src="{{imgSrc}}" />
+
+
+<script>
+    angular.module('myApp', [])
+            .run(function($rootScope, $timeout) {
+
+                $timeout(function() {
+                    $rootScope.imgSrc = 'http://static.jsbin.com/images/dave.min.svg';
+                }, 5000);
+
+            });
+</script>
+
+</body>
+</html>

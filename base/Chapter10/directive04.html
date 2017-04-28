@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div>测试指令的complie与link不同</div>
+
+<div ng-controller="MainController">
+    <cpdir></cpdir>
+    <br/>
+    <!--<lndir></lndir>-->
+</div>
+
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    var directive = {};
+    directive.cpdir = function () {
+        return {
+            restrict: 'E',
+            template: '<p>Hello {{number}}!</p>',
+            controller: function ($scope, $element) {
+                $scope.number = $scope.number + "22222 ";
+            },
+            link: function (scope, el, attr) {
+                scope.number = scope.number + "33333 ";
+            },
+            compile: function (element, attributes) {
+                return {
+                    pre: function preLink(scope, element, attributes) {
+                        scope.number = scope.number + "44444 ";
+                    },
+                    post: function postLink(scope, element, attributes) {
+                        scope.number = scope.number + "55555 ";
+                    }
+                };
+            }
+        }
+    };
+    directive.lndir=function() {
+        return {
+            restrict: 'E',
+            template: '<p>Hello {{number}}!</p>',
+            controller: function ($scope, $element) {
+                $scope.number = $scope.number + "22222 ";
+            },
+            link: function (scope, el, attr) {
+                scope.number = scope.number + "33333 ";
+            }
+        }
+    };
+    app.directive(directive);
+    function MainController($scope) {
+        $scope.number = '1111 ';
+    }
+</script>
+</body>
+</html>

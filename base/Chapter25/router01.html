@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/angular-1.2.js"></script>
+    <script src="../js/angular-route.js"></script>
+</head>
+<body>
+
+<div ng-controller="DemoController">
+
+    <div ui-view></div>
+</div>
+
+<script type="text/javascript">
+    angular.module('myApp', ['ui.router']).config(function($stateProvider,$urlRouterProvider) {
+        $stateProvider
+                .state('start', {
+                    url: '/start',
+                    templateUrl: 'partials/start.html'
+                })
+    });
+</script>
+</body>
+</html>

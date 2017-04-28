@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="emailParser">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/angular-1.2.js"></script>
+</head>
+<body>
+<div id="emailEditor">
+    <input ng-model="to"
+           type="email"
+           placeholder="Recipient" />
+    <textarea ng-model="emailBody"></textarea>
+</div>
+<div id="emailPreview">
+    123
+    <pre>__ previewText __</pre>
+</div>
+
+<script type="text/javascript">
+    angular.module('emailParser', [])
+            .config(['$interpolateProvider', function ($interpolateProvider) {
+                $interpolateProvider.startSymbol('__');
+                $interpolateProvider.endSymbol('__');
+            }])
+            .factory('EmailParser', ['$interpolate', function ($interpolate) {
+// 处理解析的服务
+                return {
+                    parse: function (text, context) {
+                        var template = $interpolate(text);
+                        return template(context);
+                    }
+                };
+            }]);
+
+</script>
+</body>
+</html>

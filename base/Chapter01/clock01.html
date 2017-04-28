@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div ng-controller="MyController">
+    <h1>Hello {{clock}}!</h1>
+    <script src="../js/angular.min.js"></script>
+
+</div>
+
+<script type="text/javascript">
+    function MyController($scope, $timeout) {
+
+        var updateClock = function () {
+            var dt = new Date();
+            var year = dt.getFullYear();
+            var mouth = dt.getMonth() + 1;
+            var day = dt.getDate();
+            var hour = dt.getHours();
+            var minute = dt.getMinutes();
+            var second = dt.getSeconds();
+            $scope.clock = year+"-"+mouth+"-"+day+" "+hour+":"+minute+":"+second;
+//            $scope.clock = new Date();
+        };
+        $timeout(function () {
+            updateClock();
+            $timeout(arguments.callee, 1000);
+
+        },1000)
+    }
+</script>
+</body>
+</html>

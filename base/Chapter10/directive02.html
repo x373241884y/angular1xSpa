@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>多个指令一次性创建,及属性restrict</div>
+<div ng-controller="MainController">
+    <input type="text" ng-model="city" placeholder="Enter a city" />
+
+    <directive01 ng-model="city" ></directive01>
+    <span directive01="exp" ng-model="city"></span>
+    <!-- directive: directive01 city 无效-->
+    <span ng-model="city"></span>
+</div>
+
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+
+    (function () {
+        var directive = {};
+        directive.directive01 =  function () {
+            return {
+                restrict: "ACEM",
+                require: "^ngModel",
+                scope: {
+                    ngModel: '='
+                },
+                template:'<div><h4>Weather for {{ngModel}}</h4>'
+            };
+        };
+        directive.directive02 =  function () {
+            var dirObj = {};
+            dirObj = {
+                //指令属性设定
+            };
+            return dirObj;
+        };
+        angular.module("app").directive(directive);
+    })();
+
+    function MainController($scope,$timeout) {
+        $scope.name = "this is tank test";
+    }
+</script>
+</body>
+</html>

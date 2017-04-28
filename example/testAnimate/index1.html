@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular-animate.js"></script>
+    <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>
+    <script src="controllers.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body ng-app="MyApp" ng-controller="MainController">
+<header>
+    <nav>
+        <a ui-sref="tab1">Tab 1</a>
+        <a ui-sref="tab2">Tab 2</a>
+        <a ui-sref="tab3">Tab 3</a>
+    </nav>
+    <a href="" ng-click="back()">&larr; Back</a>
+    <a href="" ng-click="forward()">Forward &rarr;</a>
+</header>
+
+<div class="tabs">
+    <div ui-view ng-class="slide"></div>
+</div>
+
+</body>
+
+</html>

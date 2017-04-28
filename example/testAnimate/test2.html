@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="style.css"/>
+	<script src="../js/angular-1.2.js"></script>
+	<script src="../js/ngAnimate/animate.js"></script>
+	<script src="../js/ngRoute/route.js"></script>
+	<script src="../js/ngRoute/routeParams.js"></script>
+	<script src="../js/ngRoute/directive/ngView.js"></script>
+</head>
+
+<body ng-app="MyApp" ng-controller="MainController">
+<header>
+	<nav>
+		<a ui-sref="tab1">Tab 1</a>
+		<a ui-sref="tab2">Tab 2</a>
+		<a ui-sref="tab3">Tab 3</a>
+	</nav>
+	<a href="" ng-click="back()">&larr; Back</a>
+	<a href="" ng-click="forward()">Forward &rarr;</a>
+</header>
+
+<div class="tabs">
+	<div ng-view ng-class="slide"></div>
+</div>
+
+<script type="text/javascript">
+	angular.module('MyApp.controllers', []).controller('MainController', function ($rootScope, $window, $scope) {
+		$scope.name = "Don Coyote"
+
+		$scope.slide = '';
+
+		$rootScope.$on('$stateChangeStart', function () {
+			$scope.slide = $scope.slide || 'slide-left'
+		});
+
+		$rootScope.back = function () {
+			$scope.slide = 'slide-right';
+			$window.history.back();
+		}
+
+		$rootScope.forward = function () {
+			$scope.slide = 'slide-left';
+			$window.history.forward();
+		}
+
+	});
+
+	angular.module('MyApp', [
+		'ngRoute',
+		'ngAnimate',
+		'MyApp.controllers'
+	]).config(function ($routeProvider) {
+
+		$routeProvider
+				.when('/tab1',
+						{
+							url: "/tab1",
+							templateUrl: "tab1.html"
+						})
+				.when('/tab2',
+						{
+							url: "/tab2",
+							templateUrl: "tab2.html"
+						})
+				.when('/tab3',
+						{
+							url: "/tab3",
+							templateUrl: "tab3.html"
+						});
+
+		$routeProvider.otherwise('/tab1');
+
+	});
+</script>
+</body>
+
+</html>

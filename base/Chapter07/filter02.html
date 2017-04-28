@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>test filters</div>
+<div ng-controller="filterController">
+
+    <button ng-click="test()">使用方式2</button>
+</div>
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    var filterobj = function () {
+        return function(input) {
+            return input + "01";
+        };
+    };
+    app.filter("filterobj",filterobj);
+    function filterController($scope, $filter) {
+        $scope.test = function () {
+            alert($filter('filterobj')('abcdef'));
+        };
+    }
+</script>
+</body>
+</html>

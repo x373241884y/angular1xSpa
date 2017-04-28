@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>思涂客 Stooges</title>
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular-animate.js"></script>
+	<script>
+		angular.module('app',['ngAnimate']).
+		controller('ctrl', ['$scope', function ($scope) {
+			$scope.showButton = function () {
+				$scope.expression = true;
+			}
+			$scope.hideButton = function () {
+				$scope.expression = false;
+			}
+		}])
+	</script>
+	<style>
+		#animate{ background-color:red;-webkit-transition:all linear 2s; transition:all linear 2s; opacity:1;}
+		#animate.ng-hide{ opacity:0;}
+		/*一下会慢慢解释*/
+		#animate.ng-hide { }
+		#animate.ng-hide-add { }
+		#animate.ng-hide-add.ng-hide-add-active { }
+		#animate.ng-hide-remove { }
+		#animate.ng-hide-remove.ng-hide-remove-active {  }
+	</style>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+<button ng-click="showButton()">show</button>
+<button ng-click="hideButton()">hide</button>
+<div id="animate" ng-show="expression">"思涂客"</div>
+</body>
+</html>

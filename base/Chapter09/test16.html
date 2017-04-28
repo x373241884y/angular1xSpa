@@ -1,0 +1,17 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../js/angular-1.2.js"></script>
+</head>
+<body>
+
+<div ng-show="2 + 2 == 5">2 + 2 isn't 5, don't show</div>
+<div ng-show="2 + 2 == 4">2 + 2 is 4, do show</div>
+
+<div ng-hide="2 + 2 == 5">2 + 2 isnt 5, don't hide</div>
+<div ng-hide="2 + 2 == 4">2 + 2 isnt 5, do hide</div>
+<script type="text/javascript">
+    angular.module('myApp', [])
+</script>
+</body>
+</html>

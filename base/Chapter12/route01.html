@@ -1,0 +1,31 @@
+<html>
+<meta charset="UTF-8">
+<script src="../js/angular-1.2.js"></script>
+<script src="../js/angular-route.js"></script>
+<title></title>
+
+<body>
+<header>
+    <h1>页面头部</h1>
+</header>
+<!--这里就是渲染其他视图的地方-->
+<div data-ng-view=""></div>
+<footer>
+    <h1>页面底部</h1>
+</footer>
+
+<script type="text/javascript">
+
+    var app = angular.module("app", ['ngRoute']);
+    app.config(["$routeProvider",function($routeProvider) {
+        $routeProvider.when("/", {
+            template: "<h1>内容部分</h1>"
+        }).when("/index", {
+            templateUrl: "index.html"
+        }).otherwise({
+            template: "<h2>这个是默认的模板</h2>"
+        });
+    }])
+</script>
+</body>
+</html>

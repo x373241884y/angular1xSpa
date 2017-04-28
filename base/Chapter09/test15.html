@@ -1,0 +1,21 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../js/angular-1.2.js"></script>
+</head>
+<body ng-init="greeting = 'Hello World'">
+
+<p ng-cloak>{{ greeting }}</p>
+
+
+<div
+        ng-bind-template="{{greeting}}{{greeting}}">
+</div>
+
+
+<script>
+    angular.module('myApp', [])
+</script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+</head>
+<body>
+<div>service01 test</div>
+
+<div ng-controller="ServiceController">
+    <button ng-click="firstTest()">test service01</button>
+    <button ng-click="secondTest()">test service02</button>
+    <button ng-click="thirdTest()">test service03</button>
+</div>
+
+<script src="../js/angular-1.2.js"></script>
+<script type="text/javascript">
+    var app = angular.module('app', []);//创建模块
+    // first method   create a service
+    app.factory('firstService', ['$window', function ($window) { //factory
+        var service = {};  //service 就是服务对象 (基于工厂模式)
+        service.test = function () {
+            alert("firstService");
+        };
+        $window.alert("aaaa");  //内置服务可以注入
+        return service;
+    }]);
+    app.service("secondService",['$window',function($window) { //service
+        $window.alert("bbbb");  //内置服务可以注入
+        this.message = "secondService";  //this就是服务对象 (基于构造函数模式)
+        this.test=function() {
+            alert(this.message);
+        };
+    }]);
+
+    app.provider('thirdService',[function() {   //provider方式，内置服务不可以注入
+        this.obj = {
+            "message":"thirdService",
+            "test":function() {
+                alert("thirdService");
+            }
+        };
+/*        var obj = {
+            "test":function() {
+                alert(123);
+            }
+        };*/
+        this.$get=function() {  //该方法必须，
+            return this.obj;  //这里返回的对象是作为service对象的,返回哪个对象，哪个对象就是服务
+        };
+    }])
+    function ServiceController($scope, firstService,secondService,thirdService) {
+        $scope.firstTest=function() {
+            firstService.test();
+        };
+        $scope.secondTest= function () {
+            secondService.test();
+        };
+        $scope.thirdTest= function () {
+            thirdService.test();
+        };
+    }
+</script>
+</body>
+</html>
