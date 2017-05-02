@@ -570,8 +570,10 @@
 
 	function getter(obj, path, bindFnToScope) {
 		if (!path) return obj;
-		for (var key, keys = path.split("."), lastInstance = obj, len = keys.length, i = 0; len > i; i++) {
-			key = keys[i], obj && (obj = (lastInstance = obj)[key]);
+        var key, keys = path.split("."), lastInstance = obj, len = keys.length;
+		for (var i = 0; i<len; i++) {
+			key = keys[i];
+			obj && (obj = (lastInstance = obj)[key]);
 		}
 		return !bindFnToScope && isFunction(obj) ? bind(lastInstance, obj) : obj
 	}
@@ -1275,9 +1277,9 @@
 	}
 
 	function $AnchorScrollProvider() {
-		var autoScrollingEnabled = !0;
+		var autoScrollingEnabled = true;
 		this.disableAutoScrolling = function () {
-			autoScrollingEnabled = !1
+			autoScrollingEnabled = false;
 		};
 		this.$get = ["$window", "$location", "$rootScope",
 			function ($window, $location, $rootScope) {
@@ -2682,8 +2684,9 @@
 						if (controllers.hasOwnProperty(constructor)) {
 							expression = controllers[constructor];
 						} else {
-							expression = getter(locals.$scope, constructor, !0) || getter($window, constructor, !0);
+							expression = getter(locals.$scope, constructor, true) || getter($window, constructor, true);
 						}
+                        console.log(expression);
 						assertArgFn(expression, constructor, !0);
 					}
 					instance = $injector.instantiate(expression, locals);
@@ -3139,8 +3142,27 @@
 		this.$get = ["$parse", "$exceptionHandler", "$sce",
 			function ($parse, $exceptionHandler, $sce) {
 				function $interpolate(text, mustHaveExpression, trustedContext) {
-					var startIndex, endIndex, fn, exp, index = 0, parts = [], length = text.length, hasInterpolation = !1, concat = [];
-					for (; length > index;) -1 != (startIndex = text.indexOf(startSymbol, index)) && -1 != (endIndex = text.indexOf(endSymbol, startIndex + startSymbolLength)) ? (index != startIndex && parts.push(text.substring(index, startIndex)), parts.push(fn = $parse(exp = text.substring(startIndex + startSymbolLength, endIndex))), fn.exp = exp, index = endIndex + endSymbolLength, hasInterpolation = !0) : (index != length && parts.push(text.substring(index)), index = length);
+					var startIndex, endIndex, fn, exp, index = 0, parts = [], length = text.length, hasInterpolation = false, concat = [];
+					for (; length > index;){
+                        startIndex = text.indexOf(startSymbol, index);
+                        endIndex = text.indexOf(endSymbol, startIndex + startSymbolLength);
+                        if(startIndex!=-1&&endIndex!=-1){
+                        	if(index != startIndex){
+                                parts.push(text.substring(index, startIndex))
+	                        }
+                            exp = text.substring(startIndex + startSymbolLength, endIndex);
+                            console.log('interpolate==>exp:'+exp);
+                            parts.push(fn=$parse(exp));
+                            fn.exp = exp;
+                            index = endIndex + endSymbolLength;
+                            hasInterpolation = true;
+                        }else{
+                        	if(index != length){
+                                parts.push(text.substring(index))
+	                        }
+                            index = length;
+                        }
+					}
 					length = parts.length;
 					if (!length) {
 						parts.push("");
@@ -3153,11 +3175,19 @@
 						concat.length = length;
 						fn = function (context) {
 							try {
-								for (var part, i = 0, ii = length; ii > i; i++) {
+								for (var part, i = 0, ii = length; i<ii; i++) {
 									if ("function" == typeof(part = parts[i])) {
 										part = part(context);
-										part = trustedContext ? $sce.getTrusted(trustedContext, part) : $sce.valueOf(part);
-										null === part || isUndefined(part) ? part = "" : "string" != typeof part && (part = toJson(part));
+										if(trustedContext){
+											part=$sce.getTrusted(trustedContext, part)
+										}else{
+                                            part = $sce.valueOf(part);
+										}
+										if(null === part || isUndefined(part)){
+                                            part = "";
+										}else{
+                                            "string" != typeof part && (part = toJson(part));
+										}
 									}
 									concat[i] = part;
 
@@ -3165,7 +3195,7 @@
 								return concat.join("");
 							} catch (err) {
 								var newErr = $interpolateMinErr("interr", "Can't interpolate: {0}\n{1}", text, err.toString());
-								$exceptionHandler(newErr)
+                                $exceptionHandler(newErr);
 							}
 						};
 						fn.exp = text;
@@ -3502,7 +3532,7 @@
 
 				function consoleLog(type) {
 					var console = $window.console || {};
-					var logFn = console[type] || console.log || noop;
+					var logFn = console[type] || console.log || noop; //兼容性处理
 					if (logFn.apply) {
 						return function () {
 							var args = [];
@@ -6503,20 +6533,20 @@
 					invalidCount = 0,
 					$error = this.$error = {};
 				$element.addClass(PRISTINE_CLASS);
-				toggleValidCss(!0);
+				toggleValidCss(true);
 				this.$setValidity = function (validationErrorKey, isValid) {
 					if ($error[validationErrorKey] == !!isValid) {
 						if (isValid) {
 							$error[validationErrorKey] && invalidCount--;
 							if (!invalidCount) {
-								toggleValidCss(!0);
-								this.$valid = !0;
-								this.$invalid = !1;
+								toggleValidCss(true);
+								this.$valid = true;
+								this.$invalid = false;
 							}
 						} else {
-							toggleValidCss(!1);
-							this.$invalid = !0;
-							this.$valid = !1;
+							toggleValidCss(false);
+							this.$invalid = true;
+							this.$valid = false;
 							invalidCount++;
 						}
 						$error[validationErrorKey] = !isValid;
@@ -6525,18 +6555,18 @@
 					}
 				};
 				this.$setPristine = function () {
-					this.$dirty = !1;
-					this.$pristine = !0;
+					this.$dirty = false;
+					this.$pristine = true;
 					$element.removeClass(DIRTY_CLASS).addClass(PRISTINE_CLASS);
 				};
 				this.$reset = function () {
 					this.$setPristine();
 					this.$viewValue = Number.NaN;
 					this.$modelValue = Number.NaN;
-					this.$pristine = !0;
-					this.$dirty = !1;
-					this.$valid = !0;
-					this.$invalid = !1;
+					this.$pristine = true;
+					this.$dirty = false;
+					this.$valid = true;
+					this.$invalid = false;
 					this.$name = $attr.name;
 					$error = this.$error = {};
 					invalidCount = 0;
@@ -6544,8 +6574,8 @@
 				this.$setViewValue = function (value) {
 					this.$viewValue = value;
 					if (this.$pristine) {
-						this.$dirty = !0;
-						this.$pristine = !1;
+						this.$dirty = true;
+						this.$pristine = false;
 						$element.removeClass(PRISTINE_CLASS).addClass(DIRTY_CLASS);
 						parentForm.$setDirty();
 					}
@@ -6647,7 +6677,7 @@
 						return isArray(value) ? value.join(", ") : undefined
 					});
 					ctrl.$isEmpty = function (value) {
-						return !value || !value.length
+						return !value || !value.length; //null,undefined,[] ...
 					};
 				}
 			}
@@ -7090,13 +7120,19 @@
 							}
 							selectedElements = [];
 							selectedScopes = [];
-							(selectedTranscludes = ngSwitchController.cases["!" + value] || ngSwitchController.cases["?"]) && (scope.$eval(attr.change), forEach(selectedTranscludes, function (selectedTransclude) {
-								var selectedScope = scope.$new();
-								selectedScopes.push(selectedScope), selectedTransclude.transclude(selectedScope, function (caseElement) {
-									var anchor = selectedTransclude.element;
-									selectedElements.push(caseElement), $animate.enter(caseElement, anchor.parent(), anchor)
-								})
-							}));
+                            selectedTranscludes = ngSwitchController.cases["!" + value] || ngSwitchController.cases["?"];
+                            if(selectedTranscludes){
+                                scope.$eval(attr.change);
+                                forEach(selectedTranscludes, function (selectedTransclude) {
+                                    var selectedScope = scope.$new();
+                                    selectedScopes.push(selectedScope);
+                                    selectedTransclude.transclude(selectedScope, function (caseElement) {
+                                        var anchor = selectedTransclude.element;
+                                        selectedElements.push(caseElement);
+                                        $animate.enter(caseElement, anchor.parent(), anchor);
+                                    })
+                                });
+                            }
 						})
 					}
 				}
@@ -7108,10 +7144,11 @@
 			require: "^ngSwitch",
 			compile: function (element, attrs) {
 				return function (scope, element, attr, ctrl, $transclude) {
-					ctrl.cases["!" + attrs.ngSwitchWhen] = ctrl.cases["!" + attrs.ngSwitchWhen] || [], ctrl.cases["!" + attrs.ngSwitchWhen].push({
-						transclude: $transclude,
-						element: element
-					})
+					ctrl.cases["!" + attrs.ngSwitchWhen] = ctrl.cases["!" + attrs.ngSwitchWhen] || [];
+                    ctrl.cases["!" + attrs.ngSwitchWhen].push({
+                        transclude: $transclude,
+                        element: element
+                    });
 				}
 			}
 		}),
